@@ -9,15 +9,18 @@ import Footer from './components/Footer';
 
 function App() {
   return (
-  <Router>
+    <>
     <NavigationBar/>
     <Welcome/>
+  <Router>
     <Routes>
     <Route path="/" element={<Jobs/>}/>
     <Route path="/:company" element={<CompanyInfo/>}/>
     </Routes>
   </Router>
+  </>
   );
 }
+
 
 export default App;
