@@ -25,8 +25,8 @@ function CompanyInfo() {
 
       if(response.ok) {
         const {data} = await response.json();
-        setCompanyJobs(data);
-        setLoading(false);
+          setCompanyJobs(data);
+          setLoading(false);
       }
     } catch (error) {
       console.log(error);
@@ -39,9 +39,10 @@ function CompanyInfo() {
 
   return (
     <>
-      {!isLoading ? (
+      {!isLoading && companyJobs.length ? (
         <Container>
-          <Row className="mt-5">
+          <h3 className="ml-2">Job listings by <h2 className="d-inline" style={{color:"green", letterSpacing: "1px"}}>{company}</h2></h3>
+          <Row className="mt-3 align-items-baseline">
             <Col md={3}>
               <JobList
                 selectedJob={selectedJob}
@@ -50,15 +51,21 @@ function CompanyInfo() {
               />
             </Col>
             <Col md={9}>
-              <JobDetails selectedJob={selectedJob} />
+              <JobDetails selectedJob={selectedJob}/>
             </Col>
           </Row>
         </Container>
       ) : (
-        <div className="d-flex justify-content-center">
-          <Spinner animation="grow" />
-        </div>
-      )}
+        <h2 className="text">No jobs available from Company.</h2>
+      )
+      }
+      {
+        isLoading && (
+          <div className="d-flex justify-content-center">
+            <Spinner animation="grow" />
+          </div>
+        )
+      }
     </>
   );
 }

@@ -2,34 +2,53 @@ import Row from "react-bootstrap/Row";
 import Container from "react-bootstrap/Container";
 import Col from "react-bootstrap/Col";
 import { useState, useEffect } from "react";
-import Form from "react-bootstrap/Form";
-import FormControl from "react-bootstrap/FormControl";
-import Button from "react-bootstrap/Button";
+import { useParams } from "react-router-dom";
 import JobList from "./JobList";
 import JobDetails from "./JobDetails";
 import Spinner from "react-bootstrap/Spinner";
 
-function Jobs() {
-  const [searchValue, setSearchValue] = useState("");
+function Jobs({searchValue, isSearch, setSearch, category, setCategory}) {
   const [jobs, setJobs] = useState([]);
   const [selectedJob, setSelectedJob] = useState(null);
   const [isLoading, setLoading] = useState(true);
-  //const [search, setSearch] = useState(false);
+
+  //const {company} = useParams();
+  //console.log(params);
 
   function changeJob(job) {
     setSelectedJob(job);
   }
 
+
   async function fetchJobs() {
     try {
-      const defaultUrl = "https://strive-jobs-api.herokuapp.com/jobs?limit=10&skip=10";
-      let searchUrl = `https://strive-jobs-api.herokuapp.com/jobs?search=${searchValue}&limit=10`;
-      
-      let response = await fetch(searchValue.length > 5 ? searchUrl : defaultUrl);
+      let url;
+      const baseUrl = "https://strive-jobs-api.herokuapp.com/jobs?limit=10";
+
+      if(isSearch && searchValue.length > 2) {
+        if(category) {
+          url = baseUrl + `&category=${category}&search=${searchValue}`;
+        } else {
+          url = baseUrl + `&search=${searchValue}`;
+        } 
+      } else if(isSearch && searchValue.length < 2 && category) {
+        url = baseUrl + `&category=${category}`;
+      } if(!isSearch) {
+        url = baseUrl;
+      } else {
+        url = baseUrl;
+      }
+
+
+      const response = await fetch(url);
+
       if (response.ok) {
-        const jobs = await response.json();
-        setJobs(jobs.data);
+        const {data} = await response.json();
+        setJobs(data);
         setLoading(false);
+        if(isSearch) {
+          setSearch(false);
+        }
         if (searchValue) {
           setSelectedJob(null);
         }
@@ -39,40 +58,24 @@ function Jobs() {
     }
   }
 
-  useEffect(() => {
+  /* useEffect(() => {
     fetchJobs();
-  }, []);
+  }, []); */
 
-
+  useEffect(()=> {
+    if(isSearch) {
+      fetchJobs();
+    }
+  }, [isSearch])
 
 
 
   return (
     <>
-      {!isLoading && (
+      {!isLoading && jobs.length ? (
         <Container>
-          <Form inline>
-            <FormControl
-              type="text"
-              value={searchValue}
-              onChange={(e) => {
-                setSearchValue(e.target.value);
-              }}
-              placeholder="Search for a job"
-              className=" mr-sm-2"
-            />
-            <Button
-              type="submit"
-              variant="success"
-              onClick={(e) => {
-                e.preventDefault();
-                fetchJobs();
-              }}
-            >
-              Search
-            </Button>
-          </Form>
-          <Row className="mt-5">
+          <h2 className="ml-2">Job listings</h2>
+          <Row className="mt-3 align-items-baseline">
             <Col md={3}>
               <JobList
                 selectedJob={selectedJob}
@@ -86,7 +89,7 @@ function Jobs() {
             </Col>
           </Row>
         </Container>
-      )}
+      ) : (<h2 className="text-center">No jobs found. Try with another search.</h2>)}
       {isLoading && (
         <div className="d-flex justify-content-center">
           <Spinner animation="grow" />

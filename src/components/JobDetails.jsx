@@ -1,8 +1,8 @@
 
-function JobDetails({selectedJob}) {
+function JobDetails({selectedJob, jobsFound}) {
   return (
     <>
-      {selectedJob ? (
+      {selectedJob && (
         <div>
           <div
             className="d-flex flex-column"
@@ -48,8 +48,11 @@ function JobDetails({selectedJob}) {
             />
           </div>
         </div>
-      ) : (
-        <h3 className="text-center">Please, click on a job post to see the details.</h3>
+      )}
+      {!selectedJob && (
+        <h3 className="text-center">
+          Please, click on a job post to see the details.
+        </h3>
       )}
     </>
   );
