@@ -4,14 +4,21 @@ import Welcome from './components/Welcome';
 import Jobs from "./components/Jobs";
 import CompanyInfo from "./components/CompanyInfo";
 import {useState} from "react";
+import {connect} from "react-redux";
 
+function mapStateToProps(state) {
+  return {};
+}
+// Dispatch => action, which is an object.
+function mapDispatchToProps(dispatch) {
+  return {};
+}
 
 
 function App() {
   const [searchValue, setSearchValue] = useState("");
   const [isSearch, setSearch] = useState(true);
   const [category, setCategory] = useState("");
-
 
   return (
     <>
@@ -29,4 +36,4 @@ function App() {
 }
 
 
-export default App;
+export default connect(mapStateToProps, mapDispatchToProps)(App);
