@@ -37,7 +37,6 @@ function CompanyInfo({favoriteCompanies, addToFavorite, removeFavorite}) {
   const [companyJobs, setCompanyJobs] = useState([]);
   const [selectedJob, setSelectedJob] = useState(null);
   const [isLoading, setLoading] = useState(true);
-  const [isLiked, setLike] = useState(false);
 
   function changeJob(job) {
     setSelectedJob(job);
@@ -84,7 +83,6 @@ function CompanyInfo({favoriteCompanies, addToFavorite, removeFavorite}) {
                 className="bi bi-heart-fill"
                 style={{ cursor: "pointer" }}
                 onClick={() => {
-                  setLike(false);
                   removeFavorite(company);
                 }}
               ></i>
@@ -93,7 +91,6 @@ function CompanyInfo({favoriteCompanies, addToFavorite, removeFavorite}) {
                 className="bi bi-heart"
                 style={{ cursor: "pointer" }}
                 onClick={() => {
-                  setLike(true);
                   addToFavorite(company);
                 }}
               ></i>
