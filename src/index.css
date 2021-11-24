@@ -1,0 +1,35 @@
+.selectedJobOverview {
+background: rgb(204,204,204);
+background: -moz-linear-gradient(155deg, rgba(204,204,204,1) 0%, rgba(255,255,255,1) 100%);
+background: -webkit-linear-gradient(155deg, rgba(204,204,204,1) 0%, rgba(255,255,255,1) 100%);
+background: linear-gradient(155deg, rgba(204,204,204,1) 0%, rgba(255,255,255,1) 100%);
+filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#cccccc",endColorstr="#ffffff",GradientType=1);
+}
+
+.jobDescription {
+background: rgb(204,204,204);
+background: -moz-linear-gradient(20deg, rgba(204,204,204,1) 0%, rgba(255,255,255,1) 100%);
+background: -webkit-linear-gradient(20deg, rgba(204,204,204,1) 0%, rgba(255,255,255,1) 100%);
+background: linear-gradient(20deg, rgba(204,204,204,1) 0%, rgba(255,255,255,1) 100%);
+filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#cccccc",endColorstr="#ffffff",GradientType=1);
+}
+
+
+.glow {
+  color: "#05d60e";
+  -webkit-animation: glow 1s ease-in-out infinite alternate;
+  -moz-animation: glow 1s ease-in-out infinite alternate;
+  animation: glow 1s ease-in-out infinite alternate;
+}
+
+@keyframes glow {
+  from {
+    text-shadow:  0 0 5px #fff, 0 0 10px #05d60e, 0 0 20px #05d60e, 0 0 30px #05d60e;
+  }
+  to {
+    text-shadow: 0 0 5px #fff, 0 0 10px #099a08,  0 0 20px #099a08,/* 0 0 30px, 0 0 40px #099a08, 0 0 50px #099a08 */ ;
+  }
+}
+
+
+

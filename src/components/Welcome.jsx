@@ -39,73 +39,80 @@ function Welcome({searchValue, setSearchValue, isSearch,setSearch, setCategory, 
 
   return (
     <>
-    <Jumbotron
-      fluid
-      style={{
-        background:
-          "linear-gradient(180deg, rgba(204,204,204,1) 0%, rgba(255,255,255,1) 100%)",
-      }}
-    >
-      <Container>
-        <div className="d-flex align-items-baseline">
-          <h1>Find your next job.</h1>
-          {favoriteCompanies.length > 0 && (
-            <Link to="/favorites" style={{textDecorationLine: "none"}}>
-            <i
-              className="bi bi-heart-fill ml-2"
-              fill="green"
-              style={{ cursor: "pointer", fontSize: "3rem", color: "green" }}
-            >{favoriteCompanies.length}</i>
-            </Link>
-          )}
-        </div>
-        <h5 className="card-subtitle text-muted">Search for a job.</h5>
-        <Form inline className="mt-3 align-items-baseline">
-          <div className="d-flex flex-column">
-            <FormControl
-              type="text"
-              value={searchValue}
-              onChange={(e) => {
-                setSearchValue(e.target.value);
-              }}
-              placeholder="Type here"
-            />
-            <Form.Text id="searchHelpBlock" muted>
-              Search must be over 3 characters long.
-              <br />
-              Cannot contain special characters or numbers.
-            </Form.Text>
+      <Jumbotron
+        fluid
+        style={{
+          background:
+            "linear-gradient(180deg, rgba(204,204,204,1) 0%, rgba(255,255,255,1) 100%)",
+        }}
+      >
+        <Container>
+          <div className="d-flex align-items-baseline justify-content-between">
+            <h1>Find your next job.</h1>
+            {favoriteCompanies.length > 0 && (
+              <div style={{position: "relative"}}>
+                <Link to="/favorites" style={{ textDecorationLine: "none" }}>
+                  <i
+                    className="bi bi-heart-fill ml-2 glow"
+                    style={{
+                      cursor: "pointer",
+                      fontSize: "3rem",
+                      color: "#05d60e",
+                    }}
+                  >
+                  </i>
+                    <p style={{position: "absolute", left: "1.1em", top: "0.8em", fontSize: "1.4em", color: "white"}}>{favoriteCompanies.length}</p>
+                </Link>
+              </div>
+            )}
           </div>
-          <Form.Group controlId="queryCriteria" className="ml-2">
-            <Form.Control
-              as="select"
-              onChange={(e) => {
-                console.log(e.target.value);
-                setCategory(
-                  e.target.value !== "Jobs by category" ? e.target.value : ""
-                );
+          <h5 className="card-subtitle text-muted">Search for a job.</h5>
+          <Form inline className="mt-3 align-items-baseline">
+            <div className="d-flex flex-column">
+              <FormControl
+                type="text"
+                value={searchValue}
+                onChange={(e) => {
+                  setSearchValue(e.target.value);
+                }}
+                placeholder="Type here"
+              />
+              <Form.Text id="searchHelpBlock" muted>
+                Search must be over 3 characters long.
+                <br />
+                Cannot contain special characters or numbers.
+              </Form.Text>
+            </div>
+            <Form.Group controlId="queryCriteria" className="ml-2">
+              <Form.Control
+                as="select"
+                onChange={(e) => {
+                  console.log(e.target.value);
+                  setCategory(
+                    e.target.value !== "Jobs by category" ? e.target.value : ""
+                  );
+                }}
+              >
+                <option>Filter jobs by Category</option>
+                {categories.map(function mapCategories(category) {
+                  return <option key={category}>{category}</option>;
+                })}
+              </Form.Control>
+            </Form.Group>
+            <Button
+              className="ml-1"
+              type="submit"
+              variant="success"
+              onClick={(e) => {
+                e.preventDefault();
+                setSearch(true);
               }}
             >
-              <option>Filter jobs by Category</option>
-              {categories.map(function mapCategories(category) {
-                return <option key={category}>{category}</option>;
-              })}
-            </Form.Control>
-          </Form.Group>
-          <Button
-            className="ml-1"
-            type="submit"
-            variant="success"
-            onClick={(e) => {
-              e.preventDefault();
-              setSearch(true);
-            }}
-          >
-            Search
-          </Button>
-        </Form>
-      </Container>
-    </Jumbotron>
+              Search
+            </Button>
+          </Form>
+        </Container>
+      </Jumbotron>
     </>
   );
 }

@@ -4,6 +4,7 @@ import Welcome from './components/Welcome';
 import Jobs from "./components/Jobs";
 import CompanyInfo from "./components/CompanyInfo";
 import FavoriteCompanies from './components/FavoriteCompanies';
+import Error from "../src/components/Error"
 import {useState} from "react";
 
 
@@ -40,6 +41,7 @@ function App() {
           />
           <Route path="/favorites" element={<FavoriteCompanies />} />
           <Route path="/:company" element={<CompanyInfo />} />
+          <Route path="*" element={<Error />} />
         </Routes>
       </Router>
     </>

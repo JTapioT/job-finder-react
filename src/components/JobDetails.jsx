@@ -1,18 +1,24 @@
+import {Link} from "react-router-dom";
 
-function JobDetails({selectedJob, jobsFound}) {
+function JobDetails({selectedJob}) {
   return (
     <>
       {selectedJob && (
         <div>
           <div
-            className="d-flex flex-column"
+            className="d-flex flex-column selectedJobOverview"
             style={{
               border: "1px solid #ccc",
               borderRadius: "1em",
               padding: "1em",
             }}
           >
-            <h3>{selectedJob.company_name}</h3>
+            <Link
+              to={`/${selectedJob.company_name}`}
+              style={{ textDecorationLine: "none", color: "green" }}
+            >
+              <h3>{selectedJob.company_name}</h3>
+            </Link>
             <h5 className="mt-3">
               Title:{" "}
               <h5 className="text-muted d-inline">{selectedJob.title}</h5>
@@ -43,7 +49,7 @@ function JobDetails({selectedJob, jobsFound}) {
                 borderRadius: "1em",
                 padding: "1em",
               }}
-              className="mt-5"
+              className="mt-5 jobDescription"
               dangerouslySetInnerHTML={{ __html: selectedJob.description }}
             />
           </div>
