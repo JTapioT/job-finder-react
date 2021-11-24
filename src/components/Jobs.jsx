@@ -2,7 +2,6 @@ import Row from "react-bootstrap/Row";
 import Container from "react-bootstrap/Container";
 import Col from "react-bootstrap/Col";
 import { useState, useEffect } from "react";
-import { useParams } from "react-router-dom";
 import JobList from "./JobList";
 import JobDetails from "./JobDetails";
 import Spinner from "react-bootstrap/Spinner";
@@ -12,8 +11,6 @@ function Jobs({searchValue, isSearch, setSearch, category, setCategory}) {
   const [selectedJob, setSelectedJob] = useState(null);
   const [isLoading, setLoading] = useState(true);
 
-  //const {company} = useParams();
-  //console.log(params);
 
   function changeJob(job) {
     setSelectedJob(job);
@@ -58,14 +55,15 @@ function Jobs({searchValue, isSearch, setSearch, category, setCategory}) {
     }
   }
 
-  /* useEffect(() => {
-    fetchJobs();
-  }, []); */
 
   useEffect(()=> {
-    if(isSearch) {
+    if (isSearch) {
       fetchJobs();
     }
+    // eslint-disable-next-line
+    // I wonder if this is good idea to just ignore?
+    // https://typeofnan.dev/you-probably-shouldnt-ignore-react-hooks-exhaustive-deps-warnings/
+    // TODO: Read more about exhaustive-deps-warnings
   }, [isSearch])
 
 
