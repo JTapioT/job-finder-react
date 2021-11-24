@@ -79,18 +79,7 @@ function CompanyInfo({favoriteCompanies, addToFavorite, removeFavorite}) {
                 {company}
               </h2>
             </h3>
-            {favoriteCompanies.length > 0 &&
-              favoriteCompanies.includes((listCompany) => listCompany === company) && (
-                <i
-                  className="bi bi-heart-fill"
-                  style={{ cursor: "pointer" }}
-                  onClick={() => {
-                    setLike(false);
-                    removeFavorite(company);
-                  }}
-                ></i>
-              )}
-            {isLiked && (
+            {favoriteCompanies.includes(company) ? (
               <i
                 className="bi bi-heart-fill"
                 style={{ cursor: "pointer" }}
@@ -99,8 +88,7 @@ function CompanyInfo({favoriteCompanies, addToFavorite, removeFavorite}) {
                   removeFavorite(company);
                 }}
               ></i>
-            )}
-            {!isLiked && (
+            ) : (
               <i
                 className="bi bi-heart"
                 style={{ cursor: "pointer" }}

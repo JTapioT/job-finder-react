@@ -2,7 +2,7 @@ import Navbar from "react-bootstrap/Navbar";
 import Container from "react-bootstrap/Container";
 import {Link} from "react-router-dom";
 
-function NavigationBar({searchValue, setSearchValue}) {
+function NavigationBar() {
   return (
     <Navbar expand="lg" sticky="top" style={{ background: "#ccc" }}>
       <Container>

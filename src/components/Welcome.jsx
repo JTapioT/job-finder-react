@@ -50,7 +50,7 @@ function Welcome({searchValue, setSearchValue, isSearch,setSearch, setCategory, 
         <div className="d-flex align-items-baseline">
           <h1>Find your next job.</h1>
           {favoriteCompanies.length > 0 && (
-            <Link to="/favorites">
+            <Link to="/favorites" style={{textDecorationLine: "none"}}>
             <i
               className="bi bi-heart-fill ml-2"
               fill="green"
