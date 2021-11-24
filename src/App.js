@@ -3,16 +3,9 @@ import NavigationBar from './components/NavigationBar';
 import Welcome from './components/Welcome';
 import Jobs from "./components/Jobs";
 import CompanyInfo from "./components/CompanyInfo";
+import FavoriteCompanies from './components/FavoriteCompanies';
 import {useState} from "react";
-import {connect} from "react-redux";
 
-function mapStateToProps(state) {
-  return {};
-}
-// Dispatch => action, which is an object.
-function mapDispatchToProps(dispatch) {
-  return {};
-}
 
 
 function App() {
@@ -22,12 +15,30 @@ function App() {
 
   return (
     <>
-      <NavigationBar />
-      <Welcome searchValue={searchValue} setSearchValue={setSearchValue} setSearch={setSearch} isSearch={isSearch} setCategory={setCategory}/>
       <Router>
+      <NavigationBar />
+      <Welcome
+        searchValue={searchValue}
+        setSearchValue={setSearchValue}
+        setSearch={setSearch}
+        isSearch={isSearch}
+        setCategory={setCategory}
+      />
+      {/* <FavoriteCompanies/> */}
         <Routes>
-          <Route path="/" element={<Jobs searchValue={searchValue} isSearch={isSearch} category={category} setCategory={setCategory} setSearch={setSearch}/>}
+          <Route
+            path="/"
+            element={
+              <Jobs
+                searchValue={searchValue}
+                isSearch={isSearch}
+                category={category}
+                setCategory={setCategory}
+                setSearch={setSearch}
+              />
+            }
           />
+          <Route path="/favorites" element={<FavoriteCompanies />} />
           <Route path="/:company" element={<CompanyInfo />} />
         </Routes>
       </Router>
@@ -36,4 +47,4 @@ function App() {
 }
 
 
-export default connect(mapStateToProps, mapDispatchToProps)(App);
+export default App;

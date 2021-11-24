@@ -22,19 +22,19 @@ function Jobs({searchValue, isSearch, setSearch, category, setCategory}) {
 
   async function fetchJobs() {
     try {
+      console.log(category);
       let url;
       const baseUrl = "https://strive-jobs-api.herokuapp.com/jobs?limit=10";
 
+      // TODO: Check later, might have missed something with implementation:
       if(isSearch && searchValue.length > 2) {
-        if(category) {
+        if (category && category !== "Filter jobs by Category") {
           url = baseUrl + `&category=${category}&search=${searchValue}`;
         } else {
           url = baseUrl + `&search=${searchValue}`;
         } 
-      } else if(isSearch && searchValue.length < 2 && category) {
+      } else if(isSearch && searchValue.length < 2 && category && category !== "Filter jobs by Category") {
         url = baseUrl + `&category=${category}`;
-      } if(!isSearch) {
-        url = baseUrl;
       } else {
         url = baseUrl;
       }
@@ -49,7 +49,7 @@ function Jobs({searchValue, isSearch, setSearch, category, setCategory}) {
         if(isSearch) {
           setSearch(false);
         }
-        if (searchValue) {
+        if(searchValue) {
           setSelectedJob(null);
         }
       }
