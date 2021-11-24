@@ -4,9 +4,17 @@ import Form from "react-bootstrap/Form";
 import FormControl from "react-bootstrap/FormControl";
 import Button from "react-bootstrap/Button";
 import {useState, useEffect } from "react";
+import { connect } from "react-redux";
+import {Link} from "react-router-dom";
 
 
-function Welcome({searchValue, setSearchValue, isSearch ,setSearch, setCategory}) {
+function mapStateToProps(state) {
+  return {
+    favoriteCompanies: state.favorites.companies,
+  };
+}
+
+function Welcome({searchValue, setSearchValue, isSearch,setSearch, setCategory, favoriteCompanies}) {
   const [categories, setCategories] = useState([]);
 
   async function fetchCategories() {
@@ -30,6 +38,7 @@ function Welcome({searchValue, setSearchValue, isSearch ,setSearch, setCategory}
 
 
   return (
+    <>
     <Jumbotron
       fluid
       style={{
@@ -38,23 +47,34 @@ function Welcome({searchValue, setSearchValue, isSearch ,setSearch, setCategory}
       }}
     >
       <Container>
-        <h1>Find your next job.</h1>
+        <div className="d-flex align-items-baseline">
+          <h1>Find your next job.</h1>
+          {favoriteCompanies.length > 0 && (
+            <Link to="/favorites">
+            <i
+              className="bi bi-heart-fill ml-2"
+              fill="green"
+              style={{ cursor: "pointer", fontSize: "3rem", color: "green" }}
+            >{favoriteCompanies.length}</i>
+            </Link>
+          )}
+        </div>
         <h5 className="card-subtitle text-muted">Search for a job.</h5>
         <Form inline className="mt-3 align-items-baseline">
           <div className="d-flex flex-column">
-          <FormControl
-            type="text"
-            value={searchValue}
-            onChange={(e) => {
+            <FormControl
+              type="text"
+              value={searchValue}
+              onChange={(e) => {
                 setSearchValue(e.target.value);
-            }}
-            placeholder="Type here"
-          />
-          <Form.Text id="searchHelpBlock" muted>
-            Search must be over 3 characters long.<br/>
-            Cannot contain special characters or
-            numbers.
-          </Form.Text>
+              }}
+              placeholder="Type here"
+            />
+            <Form.Text id="searchHelpBlock" muted>
+              Search must be over 3 characters long.
+              <br />
+              Cannot contain special characters or numbers.
+            </Form.Text>
           </div>
           <Form.Group controlId="queryCriteria" className="ml-2">
             <Form.Control
@@ -68,7 +88,7 @@ function Welcome({searchValue, setSearchValue, isSearch ,setSearch, setCategory}
             >
               <option>Filter jobs by Category</option>
               {categories.map(function mapCategories(category) {
-                return <option key={category}>{category}</option>
+                return <option key={category}>{category}</option>;
               })}
             </Form.Control>
           </Form.Group>
@@ -86,7 +106,8 @@ function Welcome({searchValue, setSearchValue, isSearch ,setSearch, setCategory}
         </Form>
       </Container>
     </Jumbotron>
+    </>
   );
 }
 
-export default Welcome;
+export default connect(mapStateToProps, null)(Welcome);

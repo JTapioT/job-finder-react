@@ -1,6 +1,7 @@
 import Card from "react-bootstrap/Card";
 import {Link} from "react-router-dom";
 
+
 function Job({job, changeJob, selectedJob}) {
   return (
     <Card
@@ -14,9 +15,13 @@ function Job({job, changeJob, selectedJob}) {
       <Card.Body className="d-flex">
         <div>
           <Card.Text className="font-weight-bold">{job.title}</Card.Text>
-          <Link to={`/${job.company_name}`} style={{color: "green"}}>
-          <Card.Text className="font-weight-bold">{job.company_name}</Card.Text>
-          </Link>
+          <div className="d-flex">
+            <Link to={`/${job.company_name}`} style={{ color: "green" }}>
+              <Card.Text className="font-weight-bold">
+                {job.company_name}
+              </Card.Text>
+            </Link>
+          </div>
           <Card.Text className="font-weight-bold">{job.type}</Card.Text>
         </div>
       </Card.Body>
