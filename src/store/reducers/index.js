@@ -1,4 +1,4 @@
-import { initialState } from "../index.js";
+/* import { initialState } from "../index.js";
 
 
 function mainReducer(state = initialState, action) {
@@ -23,7 +23,7 @@ function mainReducer(state = initialState, action) {
     default:
       return state;
   }
-}
+} */
 
 // Favorites, eg. ["company1", "company2", "company3"]
 // NOTE: REMEMBER NOT TO MUTATE THE ORIGINAL VALUE
@@ -33,4 +33,6 @@ function mainReducer(state = initialState, action) {
 // ["company1", "company2"] etc.
 // Filter does not mutate the original, returns a new array
 
-export default mainReducer;
+//export default mainReducer;
+
+//TODO: REMOVE THIS LATER. 

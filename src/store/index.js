@@ -1,6 +1,8 @@
-import { createStore } from "redux";
-import mainReducer from "./reducers"
+import { createStore, combineReducers, applyMiddleware, compose } from "redux";
+//import mainReducer from "./reducers"
 import { loadState, saveState } from "../localStorage.js";
+import thunk from "redux-thunk";
+import favoriteReducer from "./reducers/favorites.js";
 
 const persistedState = loadState();
 
@@ -8,14 +10,23 @@ const persistedState = loadState();
 export const initialState = {
   favorites: {
     companies: [],
+    availableJobs: [],
+    fetchError: false,
   },
 }
 
-const configureStore = createStore(mainReducer, persistedState, window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__());
+const bigReducer = combineReducers({
+  favorites: favoriteReducer,
+})
+
+// What is the usual way to name this? Find out later.
+const composer = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
+
+const configureStore = createStore(bigReducer, persistedState, composer(applyMiddleware(thunk)));
 
 configureStore.subscribe(() => {
   saveState(configureStore.getState());
-})
+});
 
 export default configureStore;
 

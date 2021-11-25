@@ -5,11 +5,14 @@ import Card from "react-bootstrap/Card";
 import Col from "react-bootstrap/Col";
 import {useEffect} from "react";
 import {Link} from "react-router-dom";
+import {fetchFavoriteCompanyJobs} from "../actions/index.js";
 
 
 function mapStateToProps(state) {
   return {
     favoriteCompanies: state.favorites.companies,
+    availableJobs: state.favorites.availableJobs,
+    fetchError: state.favorites.fetchError,
   };
 }
 
@@ -21,12 +24,23 @@ function mapDispatchToProps(dispatch) {
         payload: company,
       });
     },
+    emptyAvailableJobs: function emptyAvailableJobs() {
+      dispatch({
+        type: "EMPTY_FAVORITECOMPANY_JOBS"
+      })
+    },
+    fetchAvailableJobs: () => {
+      dispatch(fetchFavoriteCompanyJobs())
+    }
   };
 }
 
-function FavoriteCompanies({favoriteCompanies, removeFavorite}) {
+function FavoriteCompanies({favoriteCompanies, removeFavorite, fetchAvailableJobs, availableJobs, emptyAvailableJobs}) {
+
 
   useEffect(() => {
+    emptyAvailableJobs();
+    fetchAvailableJobs();
   },[favoriteCompanies])
 
   return (
@@ -34,16 +48,14 @@ function FavoriteCompanies({favoriteCompanies, removeFavorite}) {
       {favoriteCompanies.length > 0 && <h3>Your favorite companies:</h3>}
       <Row>
         {favoriteCompanies.map((company) => (
-          <Col md={3}>
+          <Col md={4}>
             <Card
               className={"mt-3"}
-              style={{
-                background: "#ccc",
-              }}
             >
               <Card.Body
-                className="d-flex align-items-baseline"
+                className="selectedJobOverview"
               >
+                <div className="d-flex align-items-baseline">
                 <Link to={`/${company}`} style={{ color: "green", textDecorationLine: "none" }}>
                   <h4>{company}</h4>
                 </Link>
@@ -52,6 +64,7 @@ function FavoriteCompanies({favoriteCompanies, removeFavorite}) {
                   style={{ cursor: "pointer", fontSize: "1.5rem" }}
                   onClick={() => removeFavorite(company)}
                 ></i>
+                </div>
               </Card.Body>
             </Card>
           </Col>
@@ -59,6 +72,54 @@ function FavoriteCompanies({favoriteCompanies, removeFavorite}) {
         {favoriteCompanies.length < 1 && (
           <h3 className="text-center">You have no favorites anymore in the list. Please add companies to your favorites.</h3>
         )}
+      </Row>
+      {
+       availableJobs.length > 0 && <h3 className="my-5">Available jobs from the companies:</h3>
+      }
+     <Row>
+        {
+          availableJobs.length > 0 && availableJobs.map((job) => {
+            console.log(job);
+            return (
+              <Col md={4}>
+                <Card className="mt-3 jobDescription" style={{ height: "300px" }}>
+                  <Card.Body>
+                    <div className="d-flex flex-column">
+                      <div className="d-flex">
+                        <Link
+                          to={`/${job.company_name}`}
+                          style={{ color: "green" }}
+                        >
+                          <Card.Text className="font-weight-bold">
+                            {job.company_name}
+                          </Card.Text>
+                        </Link>
+                      </div>
+                      <Card.Text className="font-weight-bold mt-3">
+                        {job.title}
+                      </Card.Text>
+                      <Card.Text className="font-weight-bold">
+                        Location: {job.candidate_required_location}
+                      </Card.Text>
+                      <Card.Text className="font-weight-bold">
+                        Salary: {job.salary ? job.salary : "Undisclosed"}
+                      </Card.Text>
+                      <Card.Text className="font-weight-bold">
+                        <a
+                          href={job.url}
+                          style={{ color: "green", textDecorationLine: "none" }}
+                          rel="noreferrer noopener"
+                        >
+                          Link
+                        </a>
+                      </Card.Text>
+                    </div>
+                  </Card.Body>
+                </Card>
+              </Col>
+            );
+          })
+        }
       </Row>
     </Container>
   );
