@@ -1,13 +1,25 @@
 import { createStore, combineReducers, applyMiddleware, compose } from "redux";
-//import mainReducer from "./reducers"
 import { loadState, saveState } from "../localStorage.js";
 import thunk from "redux-thunk";
-import favoriteReducer from "./reducers/favorites.js";
+import favoriteReducer from "./reducers/favorites.reducer.js";
+import jobsReducer from "./reducers/jobs.reducer.js";
+import categoryReducer from "./reducers/categories.reducer.js";
 
 const persistedState = loadState();
 
 
 export const initialState = {
+  jobs: {
+    query: false,
+    results: [],
+    selectedJob: {},
+    loading: true,
+    fetchError: false,
+  },
+  categories: {
+    results: [],
+    fetchError: false,
+  },
   favorites: {
     companies: [],
     availableJobs: [],
@@ -16,10 +28,12 @@ export const initialState = {
 }
 
 const bigReducer = combineReducers({
+  jobs: jobsReducer,
   favorites: favoriteReducer,
+  categories: categoryReducer,
 })
 
-// What is the usual way to name this? Find out later.
+
 const composer = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
 
 const configureStore = createStore(bigReducer, persistedState, composer(applyMiddleware(thunk)));

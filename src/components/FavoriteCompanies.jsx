@@ -5,7 +5,7 @@ import Card from "react-bootstrap/Card";
 import Col from "react-bootstrap/Col";
 import {useEffect} from "react";
 import {Link} from "react-router-dom";
-import {fetchFavoriteCompanyJobs} from "../actions/index.js";
+import {removeFavoriteCompany, emptyFavoriteJobList, fetchFavoriteCompanyJobs} from "../actions/favorites.actions.js";
 
 
 function mapStateToProps(state) {
@@ -18,20 +18,15 @@ function mapStateToProps(state) {
 
 function mapDispatchToProps(dispatch) {
   return {
-    removeFavorite: function removeFavorite(company) {
-      dispatch({
-        type: "REMOVE_FAVORITE_COMPANY",
-        payload: company,
-      });
+    removeFavorite: (company) => {
+      dispatch(removeFavoriteCompany(company))
     },
-    emptyAvailableJobs: function emptyAvailableJobs() {
-      dispatch({
-        type: "EMPTY_FAVORITECOMPANY_JOBS"
-      })
+    emptyAvailableJobs: () => {
+      dispatch(emptyFavoriteJobList())
     },
     fetchAvailableJobs: () => {
       dispatch(fetchFavoriteCompanyJobs())
-    }
+    },
   };
 }
 
@@ -42,6 +37,7 @@ function FavoriteCompanies({favoriteCompanies, removeFavorite, fetchAvailableJob
     emptyAvailableJobs();
     fetchAvailableJobs();
   },[favoriteCompanies])
+
 
   return (
     <Container className="mb-5 mt-5">
@@ -74,9 +70,9 @@ function FavoriteCompanies({favoriteCompanies, removeFavorite, fetchAvailableJob
         )}
       </Row>
       {
-       availableJobs.length > 0 && <h3 className="my-5">Available jobs from the companies:</h3>
+      availableJobs.length > 0 && <h3 className="my-5">Available jobs from the companies:</h3>
       }
-     <Row>
+      <Row>
         {
           availableJobs.length > 0 && availableJobs.map((job) => {
             console.log(job);

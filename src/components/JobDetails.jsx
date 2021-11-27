@@ -1,4 +1,11 @@
 import {Link} from "react-router-dom";
+import {connect} from "react-redux";
+
+function mapStateToProps(state) {
+  return {
+    selectedJob: state.jobs.selectedJob
+  }
+}
 
 function JobDetails({selectedJob}) {
   return (
@@ -64,4 +71,4 @@ function JobDetails({selectedJob}) {
   );
 }
 
-export default JobDetails;
+export default connect(mapStateToProps,null)(JobDetails);

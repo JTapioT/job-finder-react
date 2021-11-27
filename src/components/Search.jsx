@@ -6,35 +6,42 @@ import Button from "react-bootstrap/Button";
 import {useState, useEffect } from "react";
 import { connect } from "react-redux";
 import {Link} from "react-router-dom";
+import { fetchJobs } from "../actions/jobs.actions";
+import { fetchCategories } from "../actions/categories.actions";
 
 
 function mapStateToProps(state) {
   return {
     favoriteCompanies: state.favorites.companies,
+    categories: state.categories.results,
   };
 }
 
-function Welcome({searchValue, setSearchValue, isSearch,setSearch, setCategory, favoriteCompanies}) {
-  const [categories, setCategories] = useState([]);
-
-  async function fetchCategories() {
-    try {
-      const response = await fetch(
-        "https://strive-jobs-api.herokuapp.com/jobs/categories"
-      );
-
-      if (response.ok) {
-        const categories = await response.json();
-        setCategories(categories);
-      }
-    } catch (error) {
-      console.log(error);
+function dispatchStateToProps(dispatch) {
+  return({
+    fetchCategories: () => {
+      dispatch(fetchCategories())
+    },
+    searchForJobs: (query) => {
+      dispatch(fetchJobs(query))
     }
-  }
+  })
+}
 
-  useEffect(function fetchAfterMount() {
+function Search({searchForJobs, fetchCategories, categories, favoriteCompanies}) {
+  const [query, setQuery] = useState({category: "", searchValue: ""});
+  const [makeQuery, setMakeQuery] = useState(false);
+
+  useEffect(() => {
     fetchCategories();
   }, []);
+
+  useEffect(() => {
+    if(makeQuery) {
+      searchForJobs(query);
+      setMakeQuery(false);
+    }
+  }, [makeQuery])
 
 
   return (
@@ -49,7 +56,7 @@ function Welcome({searchValue, setSearchValue, isSearch,setSearch, setCategory, 
         <Container>
           <div className="d-flex align-items-baseline justify-content-between">
             <h1>Find your next job.</h1>
-            {favoriteCompanies.length > 0 && (
+            {/* {favoriteCompanies.length > 0 && (
               <div style={{position: "relative"}}>
                 <Link to="/favorites" style={{ textDecorationLine: "none" }}>
                   <i
@@ -64,16 +71,16 @@ function Welcome({searchValue, setSearchValue, isSearch,setSearch, setCategory, 
                     <p style={{position: "absolute", left: "1.1em", top: "0.8em", fontSize: "1.4em", color: "white"}}>{favoriteCompanies.length}</p>
                 </Link>
               </div>
-            )}
+            )} */}
           </div>
           <h5 className="card-subtitle text-muted">Search for a job.</h5>
           <Form inline className="mt-3 align-items-baseline">
             <div className="d-flex flex-column">
               <FormControl
                 type="text"
-                value={searchValue}
+                value={query.searchValue}
                 onChange={(e) => {
-                  setSearchValue(e.target.value);
+                  setQuery({...query, searchValue: e.target.value});
                 }}
                 placeholder="Type here"
               />
@@ -88,13 +95,17 @@ function Welcome({searchValue, setSearchValue, isSearch,setSearch, setCategory, 
                 as="select"
                 onChange={(e) => {
                   console.log(e.target.value);
-                  setCategory(
-                    e.target.value !== "Jobs by category" ? e.target.value : ""
-                  );
+                  setQuery({
+                    ...query,
+                    category:
+                      e.target.value !== "Filter jobs by category"
+                        ? e.target.value
+                        : "",
+                  });
                 }}
               >
                 <option>Filter jobs by Category</option>
-                {categories.map(function mapCategories(category) {
+                {categories && categories.map(function mapCategories(category) {
                   return <option key={category}>{category}</option>;
                 })}
               </Form.Control>
@@ -105,7 +116,7 @@ function Welcome({searchValue, setSearchValue, isSearch,setSearch, setCategory, 
               variant="success"
               onClick={(e) => {
                 e.preventDefault();
-                setSearch(true);
+                setMakeQuery(true);
               }}
             >
               Search
@@ -117,4 +128,4 @@ function Welcome({searchValue, setSearchValue, isSearch,setSearch, setCategory, 
   );
 }
 
-export default connect(mapStateToProps, null)(Welcome);
+export default connect(mapStateToProps, dispatchStateToProps)(Search);

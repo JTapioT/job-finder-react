@@ -5,96 +5,60 @@ import { useState, useEffect } from "react";
 import JobList from "./JobList";
 import JobDetails from "./JobDetails";
 import Spinner from "react-bootstrap/Spinner";
+import {fetchJobs, setJob} from "../actions/jobs.actions.js";
+import {connect} from "react-redux";
 
-function Jobs({searchValue, isSearch, setSearch, category, setCategory}) {
-  const [jobs, setJobs] = useState([]);
-  const [selectedJob, setSelectedJob] = useState(null);
-  const [isLoading, setLoading] = useState(true);
-
-
-  function changeJob(job) {
-    setSelectedJob(job);
+function mapStateToProps(state) {
+  return {
+    jobs: state.jobs.results,
+    fetchError: state.jobs.fetchError,
+    isLoading: state.jobs.loading,
   }
+};
 
-
-  async function fetchJobs() {
-    try {
-      console.log(category);
-      let url;
-      const baseUrl = "https://strive-jobs-api.herokuapp.com/jobs?limit=10";
-
-      // TODO: Check later, might have missed something with implementation:
-      if(isSearch && searchValue.length > 2) {
-        if (category && category !== "Filter jobs by Category") {
-          url = baseUrl + `&category=${category}&search=${searchValue}`;
-        } else {
-          url = baseUrl + `&search=${searchValue}`;
-        } 
-      } else if(isSearch && searchValue.length < 2 && category && category !== "Filter jobs by Category") {
-        url = baseUrl + `&category=${category}`;
-      } else {
-        url = baseUrl;
-      }
-
-
-      const response = await fetch(url);
-
-      if (response.ok) {
-        const {data} = await response.json();
-        setJobs(data);
-        setLoading(false);
-        if(isSearch) {
-          setSearch(false);
-        }
-        if(searchValue) {
-          setSelectedJob(null);
-        }
-      }
-    } catch (error) {
-      console.log(error);
+function mapDispatchToProps(dispatch) {
+  return {
+    fetchJobs: () => {
+      dispatch(fetchJobs());
     }
   }
+};
 
+function Jobs({fetchJobs, jobs, fetchError, isLoading}) {
 
-  useEffect(()=> {
-    if (isSearch) {
-      fetchJobs();
-    }
-    // eslint-disable-next-line
-    // I wonder if this is good idea to just ignore?
-    // https://typeofnan.dev/you-probably-shouldnt-ignore-react-hooks-exhaustive-deps-warnings/
-    // TODO: Read more about exhaustive-deps-warnings
-  }, [isSearch])
-
+  useEffect(() => {
+    fetchJobs();
+  }, [])
 
 
   return (
     <>
-      {!isLoading && jobs.length ? (
+      {!isLoading && jobs.length > 0 ? (
         <Container>
           <h2 className="ml-2">Job listings</h2>
           <Row className="mt-3 align-items-baseline">
             <Col md={3}>
-              <JobList
-                selectedJob={selectedJob}
-                changeJob={changeJob}
-                jobs={jobs}
-              />
+              <JobList />
               <div className="mt-5 mb-5"></div>
             </Col>
             <Col md={9}>
-              <JobDetails selectedJob={selectedJob} />
+              <JobDetails />
             </Col>
           </Row>
         </Container>
-      ) : (<h2 className="text-center">No jobs found. Try with another search.</h2>)}
+      ) : (
+        <h2 className="text-center">No jobs found. Try with another search.</h2>
+      )}
       {isLoading && (
         <div className="d-flex justify-content-center">
           <Spinner animation="grow" />
         </div>
       )}
+      {fetchError && (
+        <h2 className="text-center">Error. Please, contact support.</h2>
+      )}
     </>
   );
 }
 
-export default Jobs;
+export default connect(mapStateToProps, mapDispatchToProps)(Jobs);

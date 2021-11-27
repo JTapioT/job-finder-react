@@ -7,59 +7,39 @@ import Spinner from "react-bootstrap/Spinner";
 import JobList from "./JobList";
 import JobDetails from "./JobDetails";
 import { connect } from "react-redux";
+import {addFavoriteCompany, removeFavoriteCompany} from "../actions/favorites.actions";
+import {fetchJobs} from "../actions/jobs.actions";
+
+// 
 
 function mapStateToProps(state) {
   return {
     favoriteCompanies: state.favorites.companies,
+    companyJobs: state.jobs.results,
+    isLoading: state.jobs.loading,
   };
 }
 
 // Dispatch => action, which is an object, type required, payload optional.
 function mapDispatchToProps(dispatch) {
   return {
-    addToFavorite: function addToFavorite(company) {
-      dispatch({
-        type: "ADD_FAVORITE_COMPANY",
-        payload: company,
-      });
+    addToFavorite: (company) => {
+      dispatch(addFavoriteCompany(company))
     },
-    removeFavorite: function removeFavorite(company) {
-      dispatch({
-        type: "REMOVE_FAVORITE_COMPANY",
-        payload: company,
-      });
+    removeFavorite: (company) => {
+      dispatch(removeFavoriteCompany(company));
     },
+    getCompanyJobs: (company) => {
+      dispatch(fetchJobs({category: "", search: "", company: company}))
+    }
   };
 }
 
-function CompanyInfo({favoriteCompanies, addToFavorite, removeFavorite}) {
+function CompanyInfo({favoriteCompanies, addToFavorite, removeFavorite, getCompanyJobs, isLoading, companyJobs}) {
   const {company} = useParams();
-  const [companyJobs, setCompanyJobs] = useState([]);
-  const [selectedJob, setSelectedJob] = useState(null);
-  const [isLoading, setLoading] = useState(true);
-
-  function changeJob(job) {
-    setSelectedJob(job);
-  }
-
-  async function fetchCompanyInformation() {
-    try {
-      let response = await fetch(
-        `https://strive-jobs-api.herokuapp.com/jobs?company=${company}`
-      );
-
-      if(response.ok) {
-        const {data} = await response.json();
-          setCompanyJobs(data);
-          setLoading(false);
-      }
-    } catch (error) {
-      console.log(error);
-    }
-  }
-
+  
   useEffect(() => {
-    fetchCompanyInformation();
+    getCompanyJobs(company);
   }, [])
 
   useEffect(() => {}, [favoriteCompanies])
@@ -67,7 +47,7 @@ function CompanyInfo({favoriteCompanies, addToFavorite, removeFavorite}) {
   return (
     <>
       {!isLoading && companyJobs.length ? (
-        <Container>
+        <Container className="mt-5">
           <div className="d-flex">
             <h3 className="ml-2">
               Job listings by{" "}
@@ -98,14 +78,10 @@ function CompanyInfo({favoriteCompanies, addToFavorite, removeFavorite}) {
           </div>
           <Row className="mt-3 align-items-baseline">
             <Col md={3}>
-              <JobList
-                selectedJob={selectedJob}
-                changeJob={changeJob}
-                jobs={companyJobs}
-              />
+              <JobList />
             </Col>
             <Col md={9}>
-              <JobDetails selectedJob={selectedJob} />
+              <JobDetails />
             </Col>
           </Row>
         </Container>

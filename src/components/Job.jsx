@@ -1,6 +1,21 @@
 import Card from "react-bootstrap/Card";
 import {Link} from "react-router-dom";
+import {setJob} from "../actions/jobs.actions";
+import {connect} from "react-redux"
 
+function mapStateToProps(state) {
+  return {
+    selectedJob: state.jobs.selectedJob,
+  }
+}
+
+function dispatchStateToProps(dispatch) {
+  return ({
+    changeJob: (job) => {
+      dispatch(setJob(job));
+    }
+  })
+}
 
 function Job({job, changeJob, selectedJob}) {
   return (
@@ -29,4 +44,4 @@ function Job({job, changeJob, selectedJob}) {
   );
 }
 
-export default Job;
+export default connect(mapStateToProps, dispatchStateToProps)(Job);

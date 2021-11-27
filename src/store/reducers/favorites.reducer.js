@@ -1,36 +1,37 @@
 import { initialState } from "../index.js";
-import {GET_FAVORITECOMPANY_JOBS, GET_FAVORITECOMPANY_JOBS_ERR} from "../../actions"
+import {SET_FAVORITECOMPANY_JOBS, EMPTY_FAVORITECOMPANY_JOBS, FETCH_ERR, ADD_FAVORITE, REMOVE_FAVORITE} from "../../actions/favorites.actions"
 
-// TODO: LATER THIS EVENING REFACTOR THIS CLUSTER_F*CK ALONG WITH OTHER FILES/COMPONENTS TO CONNECT WITH REDUX.
+
 
 function favoriteReducer(state = initialState.favorites, action) {
-  // Destructure for the win!
-  const { type, payload } = action; //Sensei Ubeyt example from Debrief 23/11.
+
+  const { type, payload } = action;
 
   switch (type) {
-    case "ADD_FAVORITE_COMPANY":
+    case ADD_FAVORITE:
       return {
         ...state,
         companies: [...state.companies, payload],
       };
-    case "REMOVE_FAVORITE_COMPANY":
+    case REMOVE_FAVORITE:
       return {
         ...state,
         companies: state.companies.filter(
           (company) => company !== payload
         ),
       };
-    case GET_FAVORITECOMPANY_JOBS:
+    case SET_FAVORITECOMPANY_JOBS:
       return {
         ...state,
         availableJobs: [...state.availableJobs, ...payload]
       }
-    case "EMPTY_FAVORITECOMPANY_JOBS":
+    case EMPTY_FAVORITECOMPANY_JOBS:
       return {
         ...state,
+        // Maybe consider this again later.
         availableJobs: []
       }
-    case GET_FAVORITECOMPANY_JOBS_ERR:
+    case FETCH_ERR:
       return {
         ...state,
         fetchError: true,
