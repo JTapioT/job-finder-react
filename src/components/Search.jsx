@@ -4,45 +4,25 @@ import Form from "react-bootstrap/Form";
 import FormControl from "react-bootstrap/FormControl";
 import Button from "react-bootstrap/Button";
 import {useState, useEffect } from "react";
-import { connect } from "react-redux";
 import { fetchJobs, emptySelectedJob } from "../actions/jobs.actions";
 import { fetchCategories } from "../actions/categories.actions";
+import {useSelector, useDispatch} from "react-redux";
 
-// ! Leaving this here and not turning into hooks, so I can come back later to remember how to implement if there is need to work with Class components etc..
 
-function mapStateToProps(state) {
-  return {
-    favoriteCompanies: state.favorites.companies,
-    favoriteJobs: state.favorites.favoriteJobs,
-    categories: state.categories.results,
-  };
-}
 
-function dispatchStateToProps(dispatch) {
-  return({
-    fetchCategories: () => {
-      dispatch(fetchCategories())
-    },
-    searchForJobs: (query) => {
-      dispatch(fetchJobs(query))
-    },
-    emptySelectedJob: () => {
-      dispatch(emptySelectedJob())
-    }
-  })
-}
-
-function Search({emptySelectedJob, searchForJobs, fetchCategories, categories}) {
+function Search() {
   const [query, setQuery] = useState({category: "", searchValue: ""});
   const [makeQuery, setMakeQuery] = useState(false);
+  const categories = useSelector(state => state.categories.results);
+  const dispatch = useDispatch();
 
   useEffect(() => {
-    fetchCategories();
+    dispatch(fetchCategories());
   }, []);
 
   useEffect(() => {
     if(makeQuery) {
-      searchForJobs(query);
+      dispatch(fetchJobs(query));
       setMakeQuery(false);
     }
   }, [makeQuery])
@@ -121,7 +101,7 @@ function Search({emptySelectedJob, searchForJobs, fetchCategories, categories}) 
               onClick={(e) => {
                 e.preventDefault();
                 setMakeQuery(true);
-                emptySelectedJob();
+                dispatch(emptySelectedJob());
               }}
             >
               Search
@@ -133,4 +113,4 @@ function Search({emptySelectedJob, searchForJobs, fetchCategories, categories}) 
   );
 }
 
-export default connect(mapStateToProps, dispatchStateToProps)(Search);
+export default Search;
