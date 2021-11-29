@@ -1,13 +1,10 @@
 import Job from "./Job";
-import {connect} from "react-redux";
+import {useSelector} from "react-redux";
 
-function mapStateToProps(state) {
-  return {
-    jobs: state.jobs.results,
-  };
-}
 
-function JobList({jobs}) {
+function JobList() {
+  const jobs = useSelector(state => state.jobs.results);
+
   return(
   <div>
     { jobs.length ? (
@@ -19,4 +16,4 @@ function JobList({jobs}) {
   )
 }
 
-export default connect(mapStateToProps, null)(JobList);
+export default JobList;

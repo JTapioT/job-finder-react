@@ -3,6 +3,26 @@ export const FETCH_ERR = "FETCH_ERR";
 export const EMPTY_FAVORITECOMPANY_JOBS = "EMPTY_FAVORITECOMPANY_JOBS";
 export const ADD_FAVORITE = "ADD_FAVORITE";
 export const REMOVE_FAVORITE = "REMOVE_FAVORITE";
+export const ADD_JOB_TO_FAVORITES = "ADD_JOB_TO_FAVORITES";
+export const REMOVE_JOB_FROM_FAVORITES = "REMOVE_JOB_FROM_FAVORITES";
+
+export function addJobToFavorites(job) {
+  return (dispatch) => {
+    dispatch({
+      type: ADD_JOB_TO_FAVORITES,
+      payload: job,
+    })
+  }
+}
+
+export function removeJobFromFavorites(jobId) {
+  return (dispatch) => {
+    dispatch({
+      type: REMOVE_JOB_FROM_FAVORITES,
+      payload: jobId,
+    })
+  }
+}
 
 export function addFavoriteCompany(company) {
   return (dispatch) => {

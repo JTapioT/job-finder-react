@@ -1,27 +1,17 @@
 import Card from "react-bootstrap/Card";
 import {Link} from "react-router-dom";
 import {setJob} from "../actions/jobs.actions";
-import {connect} from "react-redux"
+import {useSelector, useDispatch} from "react-redux";
 
-function mapStateToProps(state) {
-  return {
-    selectedJob: state.jobs.selectedJob,
-  }
-}
-
-function dispatchStateToProps(dispatch) {
-  return ({
-    changeJob: (job) => {
-      dispatch(setJob(job));
-    }
-  })
-}
 
 function Job({job, changeJob, selectedJob}) {
+  const selectedJobs = useSelector(state => state.jobs.selectedJob);
+  const dispatch = useDispatch();
+
   return (
     <Card
       className={"mt-3"}
-      onClick={() => changeJob(job)}
+      onClick={() => dispatch(setJob(job))}
       style={{
         cursor: "pointer",
         background: selectedJob?._id === job._id ? "#ccc" : "white",
@@ -44,4 +34,4 @@ function Job({job, changeJob, selectedJob}) {
   );
 }
 
-export default connect(mapStateToProps, dispatchStateToProps)(Job);
+export default Job;

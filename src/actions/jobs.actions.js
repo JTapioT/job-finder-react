@@ -4,6 +4,7 @@ export const FETCH_ERR = "FETCH_ERR";
 export const TOGGLE_LOADER = "TOGGLE_LOADER";
 export const SELECTED_JOB = "SELECTED_JOB";
 export const SET_COMPANY_JOBS = "SET_COMPANY_JOBS";
+export const EMPTY_SELECTED_JOB = "EMPTY_SELECTED_JOB";
 
 
 
@@ -12,7 +13,8 @@ export function fetchJobs(query) {
     try {
       const baseUrl = "https://strive-jobs-api.herokuapp.com/jobs?limit=10";
       let url;
-      if(query) {
+      console.log(query);
+      if(query && Object.values(query).length) {
         console.log(query);
         const category = query.category ? `&category=${query.category}` : "";
         const search = query.searchValue ? `&search=${query.searchValue}` : "";
@@ -54,6 +56,19 @@ export function setJob(job) {
       dispatch({
         type: SELECTED_JOB,
         payload: job,
+      })
+    } catch (error) {
+      console.log(error);
+    }
+  }
+}
+
+export function emptySelectedJob() {
+  return (dispatch) => {
+    try {
+      dispatch({
+        type: EMPTY_SELECTED_JOB,
+        payload: {}
       })
     } catch (error) {
       console.log(error);

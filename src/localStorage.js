@@ -1,4 +1,6 @@
-export function loadState () {
+// Previously used, from Dan Abramov tutorial:
+
+/* export function loadState () {
   try {
     const serializedState = localStorage.getItem("state");
     if (serializedState === null) {
@@ -17,7 +19,7 @@ export function saveState (state) {
   } catch (err) {
     console.log(err);
   }
-};
+}; */
 
 
 

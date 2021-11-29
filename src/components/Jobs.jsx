@@ -5,14 +5,17 @@ import { useState, useEffect } from "react";
 import JobList from "./JobList";
 import JobDetails from "./JobDetails";
 import Spinner from "react-bootstrap/Spinner";
-import {fetchJobs, setJob} from "../actions/jobs.actions.js";
+import {emptySelectedJob, fetchJobs, setJob} from "../actions/jobs.actions.js";
 import {connect} from "react-redux";
+
+// ! Leaving this here and not turning into hooks, so I can come back later to remember how to implement if there is need to work with Class components etc..
 
 function mapStateToProps(state) {
   return {
     jobs: state.jobs.results,
     fetchError: state.jobs.fetchError,
     isLoading: state.jobs.loading,
+    selectedJob: state.jobs.selectedJob,
   }
 };
 
@@ -20,14 +23,18 @@ function mapDispatchToProps(dispatch) {
   return {
     fetchJobs: () => {
       dispatch(fetchJobs());
+    },
+    emptySelectedJob: () => {
+      dispatch(emptySelectedJob())
     }
   }
 };
 
-function Jobs({fetchJobs, jobs, fetchError, isLoading}) {
+function Jobs({fetchJobs, emptySelectedJob, jobs, fetchError, isLoading}) {
 
   useEffect(() => {
     fetchJobs();
+    emptySelectedJob();
   }, [])
 
 

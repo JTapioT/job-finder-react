@@ -1,4 +1,3 @@
-import {connect} from "react-redux";
 import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
 import Card from "react-bootstrap/Card";
@@ -6,44 +5,26 @@ import Col from "react-bootstrap/Col";
 import {useEffect} from "react";
 import {Link} from "react-router-dom";
 import {removeFavoriteCompany, emptyFavoriteJobList, fetchFavoriteCompanyJobs} from "../actions/favorites.actions.js";
+import {useSelector, useDispatch} from "react-redux";
 
 
-function mapStateToProps(state) {
-  return {
-    favoriteCompanies: state.favorites.companies,
-    availableJobs: state.favorites.availableJobs,
-    fetchError: state.favorites.fetchError,
-  };
-}
+function FavoriteCompanies() {
 
-function mapDispatchToProps(dispatch) {
-  return {
-    removeFavorite: (company) => {
-      dispatch(removeFavoriteCompany(company))
-    },
-    emptyAvailableJobs: () => {
-      dispatch(emptyFavoriteJobList())
-    },
-    fetchAvailableJobs: () => {
-      dispatch(fetchFavoriteCompanyJobs())
-    },
-  };
-}
-
-function FavoriteCompanies({favoriteCompanies, removeFavorite, fetchAvailableJobs, availableJobs, emptyAvailableJobs}) {
-
+  const favoriteCompanies = useSelector(state => state.favorites.companies);
+  const availableJobs = useSelector(state => state.favorites.availableJobs);
+  const dispatch = useDispatch();
 
   useEffect(() => {
-    emptyAvailableJobs();
-    fetchAvailableJobs();
+    dispatch(emptyFavoriteJobList());
+    dispatch(fetchFavoriteCompanyJobs());
   },[favoriteCompanies])
 
-
   return (
+    <>
     <Container className="mb-5 mt-5">
       {favoriteCompanies.length > 0 && <h3>Your favorite companies:</h3>}
       <Row>
-        {favoriteCompanies.map((company) => (
+        {favoriteCompanies.length > 0 && favoriteCompanies.map((company) => (
           <Col md={4}>
             <Card
               className={"mt-3"}
@@ -58,7 +39,7 @@ function FavoriteCompanies({favoriteCompanies, removeFavorite, fetchAvailableJob
                 <i
                   className="bi bi-eraser-fill ml-3"
                   style={{ cursor: "pointer", fontSize: "1.5rem" }}
-                  onClick={() => removeFavorite(company)}
+                  onClick={() => dispatch(removeFavoriteCompany(company))}
                 ></i>
                 </div>
               </Card.Body>
@@ -66,11 +47,11 @@ function FavoriteCompanies({favoriteCompanies, removeFavorite, fetchAvailableJob
           </Col>
         ))}
         {favoriteCompanies.length < 1 && (
-          <h3 className="text-center">You have no favorites anymore in the list. Please add companies to your favorites.</h3>
+          <h6 className="text-center">You have no favorite companies in the list. Please add companies to your favorites to see the available job posts by the companies you like.</h6>
         )}
       </Row>
       {
-      availableJobs.length > 0 && <h3 className="my-5">Available jobs from the companies:</h3>
+      availableJobs.length > 0 && <h3 className="my-5">Available jobs from your favorite companies:</h3>
       }
       <Row>
         {
@@ -84,7 +65,7 @@ function FavoriteCompanies({favoriteCompanies, removeFavorite, fetchAvailableJob
                       <div className="d-flex">
                         <Link
                           to={`/${job.company_name}`}
-                          style={{ color: "green" }}
+                          style={{ color: "green", textDecorationLine: "none" }}
                         >
                           <Card.Text className="font-weight-bold">
                             {job.company_name}
@@ -118,7 +99,9 @@ function FavoriteCompanies({favoriteCompanies, removeFavorite, fetchAvailableJob
         }
       </Row>
     </Container>
+    <hr/>
+    </>
   );
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(FavoriteCompanies);
+export default FavoriteCompanies;

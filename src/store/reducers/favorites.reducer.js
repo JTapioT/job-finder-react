@@ -1,5 +1,5 @@
 import { initialState } from "../index.js";
-import {SET_FAVORITECOMPANY_JOBS, EMPTY_FAVORITECOMPANY_JOBS, FETCH_ERR, ADD_FAVORITE, REMOVE_FAVORITE} from "../../actions/favorites.actions"
+import {SET_FAVORITECOMPANY_JOBS, EMPTY_FAVORITECOMPANY_JOBS, FETCH_ERR, ADD_FAVORITE, REMOVE_FAVORITE, REMOVE_JOB_FROM_FAVORITES, ADD_JOB_TO_FAVORITES} from "../../actions/favorites.actions"
 
 
 
@@ -30,6 +30,16 @@ function favoriteReducer(state = initialState.favorites, action) {
         ...state,
         // Maybe consider this again later.
         availableJobs: []
+      }
+    case ADD_JOB_TO_FAVORITES:
+      return {
+        ...state,
+        favoriteJobs: [...state.favoriteJobs, payload],
+      }
+    case REMOVE_JOB_FROM_FAVORITES:
+      return {
+        ...state,
+        favoriteJobs: state.favoriteJobs.filter(favoriteJob => favoriteJob._id !== payload)
       }
     case FETCH_ERR:
       return {

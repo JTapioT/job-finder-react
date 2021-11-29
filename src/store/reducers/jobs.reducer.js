@@ -1,5 +1,5 @@
 import { initialState } from "../index.js";
-import { SET_QUERY_RESULTS, TOGGLE_LOADER, FETCH_ERR, SELECTED_JOB, SET_COMPANY_JOBS } from "../../actions/jobs.actions.js";
+import { SET_QUERY_RESULTS, TOGGLE_LOADER, FETCH_ERR, SELECTED_JOB, SET_COMPANY_JOBS, EMPTY_SELECTED_JOB } from "../../actions/jobs.actions.js";
 
 function jobReducer(state = initialState.jobs, action) {
   const { type, payload } = action;
@@ -11,6 +11,11 @@ function jobReducer(state = initialState.jobs, action) {
         results: payload
       }
     case SELECTED_JOB:
+      return {
+        ...state,
+        selectedJob: payload
+      }
+    case EMPTY_SELECTED_JOB:
       return {
         ...state,
         selectedJob: payload

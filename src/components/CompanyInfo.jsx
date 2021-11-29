@@ -6,40 +6,21 @@ import Col from "react-bootstrap/Col";
 import Spinner from "react-bootstrap/Spinner";
 import JobList from "./JobList";
 import JobDetails from "./JobDetails";
-import { connect } from "react-redux";
 import {addFavoriteCompany, removeFavoriteCompany} from "../actions/favorites.actions";
 import {fetchJobs} from "../actions/jobs.actions";
+import { useSelector, useDispatch } from "react-redux";
 
-// 
 
-function mapStateToProps(state) {
-  return {
-    favoriteCompanies: state.favorites.companies,
-    companyJobs: state.jobs.results,
-    isLoading: state.jobs.loading,
-  };
-}
 
-// Dispatch => action, which is an object, type required, payload optional.
-function mapDispatchToProps(dispatch) {
-  return {
-    addToFavorite: (company) => {
-      dispatch(addFavoriteCompany(company))
-    },
-    removeFavorite: (company) => {
-      dispatch(removeFavoriteCompany(company));
-    },
-    getCompanyJobs: (company) => {
-      dispatch(fetchJobs({category: "", search: "", company: company}))
-    }
-  };
-}
-
-function CompanyInfo({favoriteCompanies, addToFavorite, removeFavorite, getCompanyJobs, isLoading, companyJobs}) {
+function CompanyInfo() {
   const {company} = useParams();
+  const favoriteCompanies = useSelector(state => state.favorites.companies);
+  const companyJobs = useSelector(state => state.jobs.results);
+  const isLoading = useSelector(state => state.jobs.loading);
+  const dispatch = useDispatch();
   
   useEffect(() => {
-    getCompanyJobs(company);
+    fetchJobs(company);
   }, [])
 
   useEffect(() => {}, [favoriteCompanies])
@@ -63,7 +44,7 @@ function CompanyInfo({favoriteCompanies, addToFavorite, removeFavorite, getCompa
                 className="bi bi-heart-fill"
                 style={{ cursor: "pointer" }}
                 onClick={() => {
-                  removeFavorite(company);
+                  dispatch(removeFavoriteCompany(company));
                 }}
               ></i>
             ) : (
@@ -71,7 +52,7 @@ function CompanyInfo({favoriteCompanies, addToFavorite, removeFavorite, getCompa
                 className="bi bi-heart"
                 style={{ cursor: "pointer" }}
                 onClick={() => {
-                  addToFavorite(company);
+                  dispatch(addFavoriteCompany(company));
                 }}
               ></i>
             )}
@@ -97,4 +78,4 @@ function CompanyInfo({favoriteCompanies, addToFavorite, removeFavorite, getCompa
   );
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(CompanyInfo);
+export default CompanyInfo;

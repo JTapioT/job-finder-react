@@ -5,14 +5,15 @@ import FormControl from "react-bootstrap/FormControl";
 import Button from "react-bootstrap/Button";
 import {useState, useEffect } from "react";
 import { connect } from "react-redux";
-import {Link} from "react-router-dom";
-import { fetchJobs } from "../actions/jobs.actions";
+import { fetchJobs, emptySelectedJob } from "../actions/jobs.actions";
 import { fetchCategories } from "../actions/categories.actions";
 
+// ! Leaving this here and not turning into hooks, so I can come back later to remember how to implement if there is need to work with Class components etc..
 
 function mapStateToProps(state) {
   return {
     favoriteCompanies: state.favorites.companies,
+    favoriteJobs: state.favorites.favoriteJobs,
     categories: state.categories.results,
   };
 }
@@ -24,11 +25,14 @@ function dispatchStateToProps(dispatch) {
     },
     searchForJobs: (query) => {
       dispatch(fetchJobs(query))
+    },
+    emptySelectedJob: () => {
+      dispatch(emptySelectedJob())
     }
   })
 }
 
-function Search({searchForJobs, fetchCategories, categories, favoriteCompanies}) {
+function Search({emptySelectedJob, searchForJobs, fetchCategories, categories}) {
   const [query, setQuery] = useState({category: "", searchValue: ""});
   const [makeQuery, setMakeQuery] = useState(false);
 
@@ -55,7 +59,7 @@ function Search({searchForJobs, fetchCategories, categories, favoriteCompanies})
       >
         <Container>
           <div className="d-flex align-items-baseline justify-content-between">
-            <h1>Find your next job.</h1>
+            <h1>Find your next job!</h1>
             {/* {favoriteCompanies.length > 0 && (
               <div style={{position: "relative"}}>
                 <Link to="/favorites" style={{ textDecorationLine: "none" }}>
@@ -73,7 +77,7 @@ function Search({searchForJobs, fetchCategories, categories, favoriteCompanies})
               </div>
             )} */}
           </div>
-          <h5 className="card-subtitle text-muted">Search for a job.</h5>
+          <h5 className="card-subtitle text-muted">Search for a job</h5>
           <Form inline className="mt-3 align-items-baseline">
             <div className="d-flex flex-column">
               <FormControl
@@ -98,7 +102,7 @@ function Search({searchForJobs, fetchCategories, categories, favoriteCompanies})
                   setQuery({
                     ...query,
                     category:
-                      e.target.value !== "Filter jobs by category"
+                      e.target.value != "Filter jobs by Category"
                         ? e.target.value
                         : "",
                   });
@@ -117,6 +121,7 @@ function Search({searchForJobs, fetchCategories, categories, favoriteCompanies})
               onClick={(e) => {
                 e.preventDefault();
                 setMakeQuery(true);
+                emptySelectedJob();
               }}
             >
               Search

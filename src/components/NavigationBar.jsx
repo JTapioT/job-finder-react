@@ -1,15 +1,18 @@
 import Navbar from "react-bootstrap/Navbar";
 import Container from "react-bootstrap/Container";
 import {Link} from "react-router-dom";
-import {connect} from "react-redux";
 
-function mapStateToProps(state) {
-  return {
-    favoriteCompanies: state.favorites.companies,
-  };
-}
 
-function NavigationBar({favoriteCompanies}) {
+
+import {useSelector} from "react-redux";
+import { useEffect } from "react";
+
+function NavigationBar() {
+
+  const favoriteCompanies = useSelector(state => state.favorites.companies);
+  const favoriteJobs = useSelector(state => state.favorites.favoriteJobs);
+
+
   return (
     <Navbar expand="lg" sticky="top" style={{ background: "#ccc" }}>
       <Container className="d-flex justify-content-start align-items-baseline">
@@ -24,7 +27,7 @@ function NavigationBar({favoriteCompanies}) {
             <h1 className="ml-3">Jobfinder</h1>
           </div>
         </Navbar.Brand>
-        {favoriteCompanies.length > 0 && (
+        {(favoriteJobs.length > 0 || favoriteCompanies.length > 0) && (
           <>
           <div style={{ position: "relative" }}>
             <Link to="/favorites" style={{ textDecorationLine: "none" }}>
@@ -45,7 +48,7 @@ function NavigationBar({favoriteCompanies}) {
                   color: "white",
                 }}
               >
-                {favoriteCompanies.length}
+               {/*  {favoriteCompanies.length} */}
               </p>
             </Link>
           </div>
@@ -56,4 +59,4 @@ function NavigationBar({favoriteCompanies}) {
   );
 }
 
-export default connect(mapStateToProps, null)(NavigationBar);
+export default NavigationBar;
