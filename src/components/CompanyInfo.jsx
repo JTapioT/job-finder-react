@@ -18,9 +18,11 @@ function CompanyInfo() {
   const companyJobs = useSelector(state => state.jobs.results);
   const isLoading = useSelector(state => state.jobs.loading);
   const dispatch = useDispatch();
-  
+
+  console.log(company);
+
   useEffect(() => {
-    fetchJobs(company);
+    dispatch(fetchJobs({category: "", searchValue: "", company: company}));
   }, [])
 
   useEffect(() => {}, [favoriteCompanies])

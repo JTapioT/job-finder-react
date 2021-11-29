@@ -14,7 +14,7 @@ export function fetchJobs(query) {
       const baseUrl = "https://strive-jobs-api.herokuapp.com/jobs?limit=10";
       let url;
       console.log(query);
-      if(query && Object.values(query).length) {
+      if(query) {
         console.log(query);
         const category = query.category ? `&category=${query.category}` : "";
         const search = query.searchValue ? `&search=${query.searchValue}` : "";
